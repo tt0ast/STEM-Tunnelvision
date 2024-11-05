@@ -14,7 +14,7 @@
 *.rc
 *.vcxproj
 *.filters
-*.users
+*.user
 
 ###########################
 # ignore generated binaries
