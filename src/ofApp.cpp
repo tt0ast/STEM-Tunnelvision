@@ -3,25 +3,30 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-	numberOfCircles = 50;
-	speed = 2;
-	circleDistance = 5000.f / 20;
-	circlePosition = 0;
+	numberOfSections = 6;
+	speed = 0.1;
+	tunnelPosition = 0;
+	sectionDistance = 20;
 
-	cylinder.set(500, 5000, 16, 20, 0, false);
-	cylinderOrientation.makeRotate(90, ofVec3f(1, 0, 0));
+	//cylinder.set(500, cylindeLength, 16, 20, 0, false);
+	//cylinderOrientation.makeRotate(90, ofVec3f(1, 0, 0));
 
-	cam.setDistance(cam.getDistance() * 1);
+	cam.setDistance(cam.getDistance() * 2);
+
+	tunnel.set(15, numberOfSections, sectionDistance, 8);
+	tunnelOrientation.makeRotate(90, ofVec3f(1, 0, 0));
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 
-	circleIncrement = circleDistance * (ofGetLastFrameTime() * speed);
+	tunnelIncrement = sectionDistance * (ofGetLastFrameTime() * speed);
 
-	circlePosition += circleIncrement;
-	if (circlePosition > circleDistance) {
-		circlePosition -= circleDistance;
+	tunnelPosition += tunnelIncrement;
+	if (tunnelPosition > sectionDistance) {
+		tunnel.removeSegment();
+		tunnel.addSegment();
 	}
 }
 
@@ -36,16 +41,24 @@ void ofApp::draw(){
 	float x = 1.0 / ofGetWidth();
 	float y = 1.0 / ofGetHeight();
 
-	cylinder.setPosition(x, y, circlePosition);
-	cylinder.setOrientation(cylinderOrientation);
+	tunnel.setPosition(x, y, tunnelPosition - (sectionDistance * numberOfSections / 2));
+	tunnel.setOrientation(tunnelOrientation);
 
-	cylinder.drawWireframe();
+	tunnel.drawWireframe();
 
 	cam.end();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+
+	if (key == 't') {
+		tunnel.addSegment();
+	}
+
+	if (key == 'r') {
+		tunnel.removeSegment();
+	}
 
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "ofMain.h"
+#include <ofMain.h>
+#include "tunnel.h"
 
 class ofApp : public ofBaseApp {
 
@@ -24,11 +25,13 @@ class ofApp : public ofBaseApp {
 	private:
 		float x;
 		ofEasyCam cam;
-		int numberOfCircles;
+		int numberOfSections;
 		float speed;
-		float circleDistance;
-		float circleIncrement;
-		float circlePosition;
+		float sectionDistance;
+		float tunnelIncrement;
+		float tunnelPosition;
 		ofCylinderPrimitive cylinder;
-		ofQuaternion cylinderOrientation;
+		ofQuaternion tunnelOrientation;
+
+		Tunnel tunnel;
 };
