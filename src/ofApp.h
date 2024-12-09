@@ -2,6 +2,7 @@
 
 #include <ofMain.h>
 #include "tunnel.h"
+#include <ofxOsc.h>
 
 class ofApp : public ofBaseApp {
 
@@ -24,7 +25,7 @@ class ofApp : public ofBaseApp {
 
 	private:
 		float x;
-		ofEasyCam cam;
+		ofCamera cam;
 		int numberOfSections;
 		float speed;
 		float sectionDistance;
@@ -33,5 +34,10 @@ class ofApp : public ofBaseApp {
 		ofCylinderPrimitive cylinder;
 		ofQuaternion tunnelOrientation;
 
+		ofxOscReceiver oscReceiver;
+
 		Tunnel tunnel;
+
+		int setIndex = 0;
+		bool audioReact = false;
 };

@@ -3,31 +3,67 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-	numberOfSections = 6;
-	speed = 0.1;
+	numberOfSections = 18;
+	speed = 0.5;
 	tunnelPosition = 0;
+
 	sectionDistance = 20;
 
-	//cylinder.set(500, cylindeLength, 16, 20, 0, false);
-	//cylinderOrientation.makeRotate(90, ofVec3f(1, 0, 0));
+	tunnel.set(20, numberOfSections, sectionDistance, 12, 2);
+	tunnelOrientation.makeRotate(90, ofVec3f(-1, 0, 0));
 
-	cam.setDistance(cam.getDistance() * 2);
+	tunnel.lineColorBlack();
+	tunnel.buildTunnel();
 
-	tunnel.set(15, numberOfSections, sectionDistance, 8);
-	tunnelOrientation.makeRotate(90, ofVec3f(1, 0, 0));
+	cam.setGlobalPosition(0.f, 0.f, 0.f);
+	tunnel.setOrientation(tunnelOrientation);
+
+	ofSetFrameRate(60);
+
+	oscReceiver.setup(12345);
 
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 
-	tunnelIncrement = sectionDistance * (ofGetLastFrameTime() * speed);
+	float x = 1.0 / ofGetWidth();
+	float y = 1.0 / ofGetHeight();
 
-	tunnelPosition += tunnelIncrement;
-	if (tunnelPosition > sectionDistance) {
-		tunnel.removeSegment();
-		tunnel.addSegment();
+	float bassGain = 0.f;
+	float midsGain = 0.f;
+	float highsGain = 0.f;
+
+	while (oscReceiver.hasWaitingMessages()) {
+
+		ofxOscMessage message;
+		oscReceiver.getNextMessage(message);
+
+		if (message.getAddress() == "/bassGain") {
+			bassGain = message.getArgAsFloat(0);
+		}
+
 	}
+
+	if (!audioReact) {
+		bassGain = 0.f;
+	}
+	
+	tunnel.updateTunnel(speed, ofGetLastFrameTime(), x, y, bassGain);
+
+	//if (setIndex == 1) {
+
+	//	if (ofGetFrameNum() % 5 == 0) {
+	//		tunnel.buildTunnelInc(buildupIndex);
+	//		buildupIndex++;
+
+	//		if ((buildupIndex / 12) == numberOfSections) {
+	//			setIndex = 2;
+	//			tunnel.buildTunnel();
+	//		}
+	//	}
+	//} 	
+
 }
 
 //--------------------------------------------------------------
@@ -38,12 +74,6 @@ void ofApp::draw(){
 	ofBackground(0);
 	ofNoFill();
 
-	float x = 1.0 / ofGetWidth();
-	float y = 1.0 / ofGetHeight();
-
-	tunnel.setPosition(x, y, tunnelPosition - (sectionDistance * numberOfSections / 2));
-	tunnel.setOrientation(tunnelOrientation);
-
 	tunnel.drawWireframe();
 
 	cam.end();
@@ -52,12 +82,25 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 
-	if (key == 't') {
-		tunnel.addSegment();
+	if (key == 'f') {
+		ofToggleFullscreen();
 	}
 
-	if (key == 'r') {
-		tunnel.removeSegment();
+	if (key == 's') {
+		tunnel.lineColorWhite();
+	}
+
+	if (key == 'b') {
+		if (audioReact) {
+			audioReact = false;
+		}
+		else {
+			audioReact = true;
+		}
+	}
+
+	if (key == 'e') {
+		tunnel.lineColorBlack();
 	}
 
 }
