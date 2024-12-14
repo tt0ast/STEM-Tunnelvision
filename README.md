@@ -9,7 +9,7 @@ This branch is an archive of the version used for the DnB performance at STEM 20
 - Press **e** to let the tunnel dissappear
 - Press **b** to toggle audio reactivity 
 
-## Installaltion
+## Installation
 
 Extensions Used:
 - OfOSC
